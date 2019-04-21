@@ -127,9 +127,13 @@ struct FilePreview : public cppurses::layout::Vertical
         const auto& children = display.children.get();
         std::for_each(rbegin(children), rend(children), [](const auto& child){child->close();});
 
-        auto itemsToShow = std::min(content.size(), height());
+        decltype(height()) halfHeight = height()/2;
+        decltype(halfHeight) zero = 0;
 
-        for(int i = 0; i < itemsToShow; ++i)
+        auto start = std::max(zero, result.lineNumber - halfHeight);
+        auto stop =  std::min(content.size(),result.lineNumber + halfHeight);
+
+        for(int i = start; i < stop; ++i)
         {
             auto& item = display.make_child<Label>(content[i]);
             if(i+1 == result.lineNumber)
