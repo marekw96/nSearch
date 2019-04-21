@@ -121,7 +121,7 @@ struct FilePreview : public cppurses::layout::Vertical
 {
     void setPreview(Result result)
     {
-        filePath.set_contents(result.filePath);
+        filePath.set_contents(std::string("Loading:") + result.filePath.data());
         auto content = file.readLines(result.filePath);
         
         const auto& children = display.children.get();
@@ -139,6 +139,7 @@ struct FilePreview : public cppurses::layout::Vertical
             if(i+1 == result.lineNumber)
                 item.brush.set_foreground(Color::Light_blue);
         }
+        filePath.set_contents(result.filePath);
     }
 
     FileReader file;
@@ -171,8 +172,11 @@ struct SearchInput : cppurses::Line_edit{
         if(key.key == Key::Enter)
         {
             std::string command = this->contents().str();
-            searchSignal(command);
-            this->set_contents("");
+            if(!command.empty())
+            {
+                searchSignal(command);
+                this->set_contents("");
+            }
         }
         if(key.key == Key::Arrow_down)
         {

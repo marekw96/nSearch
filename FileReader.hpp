@@ -6,10 +6,12 @@
 #include <memory>
 #include "GrepHandler.hpp"
 
+using Lines = std::vector<std::string>;
+
 class FileReader
 {
 public:
-    std::vector<std::string> readLines(std::string_view path)
+    Lines readLines(std::string_view path)
     {
         auto content = readFile(path);
         auto lines = splitByLine(content);
@@ -27,7 +29,7 @@ public:
     }
 
 private:
-    std::vector<std::string> splitByLine(std::string_view input)
+    Lines splitByLine(std::string_view input)
     {
         std::stringstream stream(input.data());
         std::vector<std::string> lines;
