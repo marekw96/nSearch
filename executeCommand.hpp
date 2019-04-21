@@ -11,6 +11,8 @@ auto OUTPUT_FILE = "command_output.txt";
 std::string executeCommand(std::string_view command)
 {
     std::string full_cmd{command};
+    full_cmd += " --exclude ";
+    full_cmd += OUTPUT_FILE;
     full_cmd += " > ";
     full_cmd += OUTPUT_FILE;
     full_cmd += " 2>&1";

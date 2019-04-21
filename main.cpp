@@ -24,6 +24,7 @@ struct ResultLine : public cppurses::layout::Horizontal
         path.set_contents(result.filePath);
 
         line_number.width_policy.fixed(5);
+        line_number.set_alignment(Alignment::Right);
     }
 
     void highlightOn()
@@ -65,26 +66,48 @@ struct ItemList : public cppurses::layout::Vertical
     {
         this->results = std::move(results);
         selected = 0;
+        minIndex = 0;
+        maxIndex = height();
 
-        redraw();
+        redrawFromTop();
     }
 
     void selectLower()
     {
-        int old = selected;
-        if(++selected == results.size())
-            selected = 0;
+        if(selected == results.size() -1)
+            return;
+        
+        ++selected;
 
-        changeSelection(old, selected);
+        if(selected >= maxIndex)
+        {
+            removeChildFromTop();
+            this->make_child<ResultLine>(results[selected]);
+            ++maxIndex;
+            ++minIndex;
+        }
+
+        changeSelection(selected - minIndex -1, selected - minIndex);
     }
 
     void selectUpper()
     {
         int old = selected;
-        if(selected-- == 0)
-            selected = results.size() -1;
+        
+        if(selected == 0)
+            return;
 
-        changeSelection(old, selected);
+        --selected;
+
+        if(selected < minIndex)
+        {
+            removeChildFromBottom();
+            children.insert(std::make_unique<ResultLine>(results[selected]), 0);
+            --maxIndex;
+            --minIndex;
+        }
+
+        changeSelection(selected - minIndex + 1, selected - minIndex);
     }
 
 private:
@@ -94,7 +117,19 @@ private:
         std::for_each(rbegin(children), rend(children), [](const auto& child){child->close();});
     }
 
-    void redraw()
+    void removeChildFromTop()
+    {
+        const auto& children = this->children.get();
+        children.front()->close();
+    }
+
+    void removeChildFromBottom()
+    {
+        const auto& children = this->children.get();
+        children.back()->close();
+    }
+
+    void redrawFromTop()
     {
         removeChildren();
         auto height = std::min(this->height(), results.size());
@@ -120,6 +155,8 @@ private:
     }
 
     int selected = 0;
+    int minIndex = 0;
+    int maxIndex = 0;
     std::vector<Result> results;
 };
 
