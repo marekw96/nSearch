@@ -1,0 +1,25 @@
+./build/command_output.txt:4:./CMakeFiles/nSearch.dir/depend.internal:123: /home/marek/Dev/nSearch/GrepHandler.hpp
+./build/command_output.txt:5:./CMakeFiles/nSearch.dir/depend.make:122:CMakeFiles/nSearch.dir/main.cpp.o: ../GrepHandler.hpp
+./build/command_output.txt:6:./CMakeFiles/nSearch.dir/CXX.includecache:1204:GrepHandler.hpp
+./build/command_output.txt:7:./CMakeFiles/nSearch.dir/CXX.includecache:1205:/home/marek/Dev/nSearch/GrepHandler.hpp
+./build/command_output.txt:8:./CMakeFiles/nSearch.dir/CXX.includecache:1207:/home/marek/Dev/nSearch/GrepHandler.hpp
+./build/command_output.txt:9:./CMakeFiles/nSearch.dir/CXX.includecache:1236:GrepHandler.hpp
+./build/command_output.txt:10:./CMakeFiles/nSearch.dir/CXX.includecache:1237:/home/marek/Dev/nSearch/GrepHandler.hpp
+Binary file ./build/nSearch matches
+Binary file ./build/CMakeFiles/nSearch.dir/main.cpp.o matches
+./build/CMakeFiles/nSearch.dir/depend.internal:123: /home/marek/Dev/nSearch/GrepHandler.hpp
+./build/CMakeFiles/nSearch.dir/depend.make:122:CMakeFiles/nSearch.dir/main.cpp.o: ../GrepHandler.hpp
+./build/CMakeFiles/nSearch.dir/CXX.includecache:1204:GrepHandler.hpp
+./build/CMakeFiles/nSearch.dir/CXX.includecache:1205:/home/marek/Dev/nSearch/GrepHandler.hpp
+./build/CMakeFiles/nSearch.dir/CXX.includecache:1207:/home/marek/Dev/nSearch/GrepHandler.hpp
+./build/CMakeFiles/nSearch.dir/CXX.includecache:1236:GrepHandler.hpp
+./build/CMakeFiles/nSearch.dir/CXX.includecache:1237:/home/marek/Dev/nSearch/GrepHandler.hpp
+grep: input file ‘./command_output.txt’ is also the output
+Binary file ./.git/index matches
+./.git/COMMIT_EDITMSG:1:GrepHandler
+./.git/logs/HEAD:2:ed747010433b85d1e10f4e3129ecf5df90f3e613 effa5d34235958990ef66d6cdce847add46db963 Marek <marek@wiecek.pro> 1555779960 +0200	commit: GrepHandler
+./.git/logs/refs/heads/master:2:ed747010433b85d1e10f4e3129ecf5df90f3e613 effa5d34235958990ef66d6cdce847add46db963 Marek <marek@wiecek.pro> 1555779960 +0200	commit: GrepHandler
+./GrepHandler.hpp:17:class GrepHandler
+./FileReader.hpp:7:#include "GrepHandler.hpp"
+./main.cpp:2:#include "GrepHandler.hpp"
+./main.cpp:215:    GrepHandler grep;

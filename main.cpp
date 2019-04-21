@@ -1,7 +1,9 @@
 #include "executeCommand.hpp"
 #include "GrepHandler.hpp"
+#include "FileReader.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 #include <cppurses/cppurses.hpp>
 #include <string>
@@ -9,6 +11,9 @@
 using namespace cppurses;
 
 sig::Signal<void(std::string)> searchSignal;
+sig::Signal<void()> selectLowerSignal;
+sig::Signal<void()> selectUpperSignal;
+sig::Signal<void(Result)> changedPreview;
 
 struct ResultLine : public cppurses::layout::Horizontal
 {
@@ -20,8 +25,6 @@ struct ResultLine : public cppurses::layout::Horizontal
 
         line_number.width_policy.fixed(5);
         highlightOff();
-        
-        this->update();
     }
 
     void highlightOn()
@@ -40,47 +43,112 @@ struct ResultLine : public cppurses::layout::Horizontal
 
 struct ItemList : public cppurses::layout::Vertical
 {
+    ItemList()
+    {
+        selectLowerSignal.connect([&](){
+                selectLower();
+            });
+
+        selectUpperSignal.connect([&](){
+                selectUpper();
+            });
+    }
+
     void setResults(std::vector<Result> results)
     {
-        removeChildren();
         this->results = std::move(results);
         selected = 0;
 
         redraw();
     }
 
+    void selectLower()
+    {
+        int old = selected;
+        if(++selected == results.size())
+            selected = 0;
+
+        changeSelection(old, selected);
+    }
+
+    void selectUpper()
+    {
+        int old = selected;
+        if(selected-- == 0)
+            selected = results.size() -1;
+
+        changeSelection(old, selected);
+    }
+
+private:
     void removeChildren()
     {
-        this->children = Children_data{this};
+        const auto& children = this->children.get();
+        std::for_each(rbegin(children), rend(children), [](const auto& child){child->close();});
     }
 
     void redraw()
     {
+        removeChildren();
         auto height = std::min(this->height(), results.size());
         for(int i = 0; i < height; i++)
             this->make_child<ResultLine>(results[i]);
 
-        hightlight();
+        changeSelection(selected, selected);
     }
 
-    void hightlight()
+    void changeSelection(int from, int to)
     {
         const auto& children = this->children.get();
         if(children.size() == 0)
             return;
 
-        auto* child = reinterpret_cast<ResultLine*>(children[selected].get());
-        child->highlightOn();
+        auto* child =  reinterpret_cast<ResultLine*>(children[from].get());
+        child->highlightOff();
+        
+        auto* child2 = reinterpret_cast<ResultLine*>(children[to].get());
+        child2->highlightOn();
+
+        changedPreview(results[to]);
     }
 
-private:
     int selected = 0;
     std::vector<Result> results;
 };
 
+
+struct FilePreview : public cppurses::layout::Vertical
+{
+    void setPreview(Result result)
+    {
+        filePath.set_contents(result.filePath);
+        auto content = file.readLines(result.filePath);
+        
+        const auto& children = display.children.get();
+        std::for_each(rbegin(children), rend(children), [](const auto& child){child->close();});
+
+        auto itemsToShow = std::min(content.size(), height());
+
+        for(int i = 0; i < itemsToShow; ++i)
+        {
+            auto& item = display.make_child<Label>(content[i]);
+            if(i+1 == result.lineNumber)
+                item.brush.set_foreground(Color::Light_blue);
+        }
+    }
+
+    FileReader file;
+    Label& filePath{this->make_child<Label>("Loading")};
+    layout::Vertical& display{this->make_child<layout::Vertical>()};
+};
+
 struct ResultWindow : public cppurses::layout::Horizontal{
     void init()
-    {}
+    {
+        changedPreview.connect([&](Result result){
+            preview.setPreview(std::move(result));
+                });
+    }
     
     void setResults(std::vector<Result> results)
     {
@@ -88,7 +156,7 @@ struct ResultWindow : public cppurses::layout::Horizontal{
     }
 
     ItemList& items{this->make_child<ItemList>()};
-    Text_display& preview{this->make_child<Text_display>("Preview")};
+    FilePreview& preview{this->make_child<FilePreview>()};
 };
 
 struct SearchInput : cppurses::Line_edit{
@@ -101,6 +169,14 @@ struct SearchInput : cppurses::Line_edit{
             std::string command = this->contents().str();
             searchSignal(command);
             this->set_contents("");
+        }
+        if(key.key == Key::Arrow_down)
+        {
+            selectLowerSignal();
+        }
+        if(key.key == Key::Arrow_up)
+        {
+            selectUpperSignal();
         }
 
         return Line_edit::key_press_event(key);
