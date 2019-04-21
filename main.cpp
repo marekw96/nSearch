@@ -24,17 +24,24 @@ struct ResultLine : public cppurses::layout::Horizontal
         path.set_contents(result.filePath);
 
         line_number.width_policy.fixed(5);
-        highlightOff();
     }
 
     void highlightOn()
     {
-       line_number.brush.set_foreground(Color::Red);
+       line_number.brush.set_foreground(Color::Violet);
+       line_number.append(""); //TODO:: ugly hack to hightlighting works :( 
+
+       path.brush.set_foreground(Color::Violet);
+       path.append(""); //TODO:: ugly hack to hightlighting works :( 
     }
 
     void highlightOff()
     {
        line_number.brush.set_foreground(Color::White);
+       line_number.append(""); //TODO:: ugly hack to hightlighting works :( 
+
+       path.brush.set_foreground(Color::White);
+       path.append(""); //TODO:: ugly hack to hightlighting works :( 
     }
 
     Label& line_number{this->make_child<Label>("")};
