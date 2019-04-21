@@ -74,7 +74,7 @@ struct ItemList : public cppurses::layout::Vertical
 
     void selectLower()
     {
-        if(selected == results.size() -1)
+        if(selected >= results.size() -1 || results.empty())
             return;
         
         ++selected;
