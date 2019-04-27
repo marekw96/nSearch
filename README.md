@@ -1,4 +1,4 @@
-#n Search
+# nSearch
 Simple TUI (terminal user interface) adapter for grep command with preview feature.
 
 ## How to 

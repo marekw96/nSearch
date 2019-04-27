@@ -5,6 +5,7 @@
 #include <string_view>
 #include <memory>
 #include "GrepHandler.hpp"
+#include "Mmap.hpp"
 
 using Lines = std::vector<std::string>;
 
@@ -19,19 +20,18 @@ public:
         return std::move(lines);
     }
 
-    std::string readFile(std::string_view path)
+    Mmap readFile(std::string_view path)
     {
-        std::ifstream file(path.data());
-        std::string output((std::istreambuf_iterator<char>(file)),
-                           (std::istreambuf_iterator<char>()));
+        Mmap output;
+        output.openFile(path);
 
         return output;
     }
 
 private:
-    Lines splitByLine(std::string_view input)
+    Lines splitByLine(const Mmap& input)
     {
-        std::stringstream stream(input.data());
+        std::stringstream stream(input.cbegin());
         std::vector<std::string> lines;
         std::string temp;
 
