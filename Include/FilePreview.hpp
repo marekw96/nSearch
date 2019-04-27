@@ -18,22 +18,18 @@ struct FilePreview : public cppurses::layout::Vertical
         auto content = file.readLines(result.filePath);
 
         LOG(DEBUG) << "Loaded file " << result.filePath.data() << std::endl;
-        LOG(DEBUG) << "Lines: " << content.size() << std::endl;
+        LOG(DEBUG) << "Size of content " << content.size() << std::endl;
         
         const auto& children = display.children.get();
         std::for_each(rbegin(children), rend(children), [](const auto& child){child->close();});
 
         decltype(height()) halfHeight = height()/2;
-        decltype(halfHeight) zero = 0;
         decltype(halfHeight) start = 0;
 
         if(result.lineNumber > halfHeight)
-            start = std::max(zero, result.lineNumber - halfHeight);
-        else
-            start = std::max(zero, halfHeight - result.lineNumber);
+            start = result.lineNumber - halfHeight;
 
-        auto stop =  std::min(content.size(),result.lineNumber + halfHeight);
-        LOG(DEBUG) << "start " << start << " | stop " << stop << std::endl;
+        auto stop =  std::min(content.size(), start + height());
 
         for(int i = start; i < stop; ++i)
         {
@@ -42,8 +38,6 @@ struct FilePreview : public cppurses::layout::Vertical
                 item.brush.set_foreground(Color::Light_blue);
         }
         filePath.set_contents(result.filePath);
-
-        LOG(DEBUG) << "Lines in content" << children.size() << std::endl;
     }
 
     FileReader file;
