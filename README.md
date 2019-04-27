@@ -1,7 +1,7 @@
-#nSearch
+#n Search
 Simple TUI (terminal user interface) adapter for grep command with preview feature.
 
-##How to 
+## How to 
 *	`git clone --recursive https://github.com/marekw96/nSearch`
 * `cd nSearch`
 * `mkdir build`
@@ -10,5 +10,5 @@ Simple TUI (terminal user interface) adapter for grep command with preview featu
 * `make`
 * ` ./nSearch`
 
-##How it looks
+## How it looks
 [![Main Window](https://github.com/marekw96/nSearch/blob/master/doc/mainwindow.png "Main Window")](https://github.com/marekw96/nSearch/blob/master/doc/mainwindow.png "Main Window")
