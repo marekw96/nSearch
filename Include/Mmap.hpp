@@ -103,6 +103,7 @@ private:
         if(file == MAP_FAILED)
             throw FileOpenException();
     }
+
     descriptor desc;
     unsigned size;
     filePtr file;
