@@ -15,7 +15,7 @@ struct FilePreview : public cppurses::layout::Vertical
     void setPreview(Result result)
     {
         filePath.set_contents(std::string("Loading:") + result.filePath.data());
-        auto content = file.readLines(result.filePath);
+        const auto& content = file.readLines(result.filePath);
 
         LOG(DEBUG) << "Loaded file " << result.filePath.data() << std::endl;
         LOG(DEBUG) << "Size of content " << content.size() << std::endl;
@@ -33,7 +33,7 @@ struct FilePreview : public cppurses::layout::Vertical
 
         for(int i = start; i < stop; ++i)
         {
-            auto& item = display.make_child<Label>(content[i]);
+            auto& item = display.make_child<Label>(content[i].data());
             if(i+1 == result.lineNumber)
                 item.brush.set_foreground(Color::Light_blue);
         }

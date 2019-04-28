@@ -7,6 +7,13 @@
 #include <fcntl.h>
 #include "PointerReverseIterator.hpp"
 
+#include <stdexcept>
+
+struct FileOpenException : std::runtime_error
+{
+    FileOpenException() : runtime_error{"Could not open file"} {}
+};
+
 class Mmap
 {
     using descriptor = int;
@@ -19,9 +26,16 @@ public:
     using reverse_iterator = PointerReverseIterator<char>;
     using const_reverse_iterator = PointerReverseIterator<const char>;
 
-    Mmap()
+    Mmap(std::string_view path)
         : desc{-1}, size{0}, file{nullptr}
-    {}
+    {
+        openFile(path);
+    }
+    Mmap(const Mmap&) = delete;
+    Mmap& operator=(const Mmap&) = delete;
+
+    Mmap(Mmap&&) = default;
+    Mmap& operator=(Mmap&&) = default;
     
     ~Mmap()
     {
@@ -30,24 +44,6 @@ public:
 
         if(desc != -1)
             close(desc);
-    }
-
-    bool openFile(std::string_view path)
-    {
-        desc = open(path.data(), O_RDONLY); 
-        if(desc == -1)
-            return false;
-
-        struct stat fileStats;
-        if(fstat(desc, &fileStats) == -1)
-            return false;
-        size = fileStats.st_size;
-
-        file = reinterpret_cast<char*>(mmap(NULL, size, PROT_READ, MAP_PRIVATE, desc, 0));
-        if(file == MAP_FAILED)
-            return false;
-
-        return true;
     }
 
     iterator begin()
@@ -92,6 +88,21 @@ public:
     }
 
 private:
+    void openFile(std::string_view path)
+    {
+        desc = open(path.data(), O_RDONLY); 
+        if(desc == -1)
+            throw FileOpenException();
+
+        struct stat fileStats;
+        if(fstat(desc, &fileStats) == -1)
+            throw FileOpenException();
+        size = fileStats.st_size;
+
+        file = reinterpret_cast<char*>(mmap(NULL, size, PROT_READ, MAP_PRIVATE, desc, 0));
+        if(file == MAP_FAILED)
+            throw FileOpenException();
+    }
     descriptor desc;
     unsigned size;
     filePtr file;
