@@ -31,6 +31,7 @@ struct ItemList : public cppurses::layout::Vertical
         maxIndex = height();
 
         redrawFromTop();
+        changedPreview(this->results[selected]);
     }
 
     void selectLower()
@@ -49,6 +50,7 @@ struct ItemList : public cppurses::layout::Vertical
         }
 
         changeSelection(selected - minIndex -1, selected - minIndex);
+        changedPreview(results[selected]);
     }
 
     void selectUpper()
@@ -69,6 +71,7 @@ struct ItemList : public cppurses::layout::Vertical
         }
 
         changeSelection(selected - minIndex + 1, selected - minIndex);
+        changedPreview(results[selected]);
     }
 
 private:
@@ -112,7 +115,6 @@ private:
         auto* child2 = reinterpret_cast<ResultLine*>(children[to].get());
         child2->highlightOn();
 
-        changedPreview(results[to]);
     }
 
     int selected = 0;
