@@ -6,7 +6,10 @@
 
 using namespace cppurses;
 
-sig::Signal<void(std::string)> searchSignal;
-sig::Signal<void()> selectLowerSignal;
-sig::Signal<void()> selectUpperSignal;
-sig::Signal<void(Result)> changedPreview;
+struct Signal
+{
+    static sig::Signal<void(std::string)> search;
+    static sig::Signal<void()> selectLower;
+    static sig::Signal<void()> selectUpper;
+    static sig::Signal<void(Result)> changedPreview;
+};

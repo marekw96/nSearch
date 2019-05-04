@@ -1,6 +1,4 @@
-#include <algorithm>
 #include <cppurses/cppurses.hpp>
-#include <string>
 #include "aixlog.hpp"
 
 #include "MainWindow.hpp"

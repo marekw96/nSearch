@@ -55,6 +55,16 @@ public:
     {
         return file + size + 1;
     }
+    
+    const_iterator begin() const
+    {
+        return cbegin();
+    }
+
+    const_iterator end() const
+    {
+        return cend();
+    }
 
     const_iterator cbegin() const
     {

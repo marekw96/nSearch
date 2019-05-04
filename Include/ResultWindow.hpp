@@ -13,7 +13,7 @@ using namespace cppurses;
 struct ResultWindow : public cppurses::layout::Horizontal{
     void init()
     {
-        changedPreview.connect([&](Result result){
+        Signal::changedPreview.connect([&](Result result){
             preview.setPreview(std::move(result));
                 });
     }

@@ -17,7 +17,7 @@ public:
         output.init();
         input.init();
         Focus::set_focus_to(&input.search);
-        searchSignal.connect([&](std::string command){
+        Signal::search.connect([&](std::string command){
                 auto results = grep.grep(command);
 
                 output.setResults(std::move(results));
