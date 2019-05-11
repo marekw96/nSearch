@@ -47,7 +47,6 @@ void ItemList::selectLower()
     }
 
     changeSelection(selected - minIndex -1, selected - minIndex);
-    Signal::changedPreview(results[selected]);
 }
 
 void ItemList::selectUpper()
@@ -66,7 +65,6 @@ void ItemList::selectUpper()
     }
 
     changeSelection(selected - minIndex + 1, selected - minIndex);
-    Signal::changedPreview(results[selected]);
 }
 
 void ItemList::removeChildren()
@@ -109,4 +107,5 @@ void ItemList::changeSelection(int from, int to)
     auto* child2 = reinterpret_cast<ResultLine*>(children[to].get());
     child2->highlightOn();
 
+    Signal::changedPreview(results[selected]);
 }
