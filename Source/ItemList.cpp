@@ -52,8 +52,6 @@ void ItemList::selectLower()
 
 void ItemList::selectUpper()
 {
-    int old = selected;
-    
     if(selected == 0)
         return;
 
@@ -93,7 +91,7 @@ void ItemList::redrawFromTop()
 {
     removeChildren();
     auto height = std::min(this->height(), results.size());
-    for(int i = 0; i < height; i++)
+    for(auto i = 0u; i < height; i++)
         this->make_child<ResultLine>(results[i]);
 
     changeSelection(selected, selected);

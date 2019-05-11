@@ -52,6 +52,6 @@ void FilePreview::fillDisplayIfNeeded()
     if(!display.children.get().empty())
         return;
 
-    for(int i = 0; i < display.height(); ++i)
+    for(auto i = 0u; i < display.height(); ++i)
         display.make_child<Label>("");
 }

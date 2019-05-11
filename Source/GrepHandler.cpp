@@ -32,8 +32,8 @@ namespace
         auto mark = ':';
         std::stringstream stream;
         std::string path;
-        int lineNumber = 0;
-        bool parsingPath;
+        auto lineNumber = 0u;
+        bool parsingPath = true;
 
         for(auto letter : line)
         {

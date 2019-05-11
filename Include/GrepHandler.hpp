@@ -6,7 +6,7 @@
 
 struct Result
 {
-    int lineNumber;
+    unsigned lineNumber;
     std::string filePath;
 };
 

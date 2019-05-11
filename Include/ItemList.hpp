@@ -22,8 +22,8 @@ private:
     void redrawFromTop();
     void changeSelection(int from, int to);
 
-    int selected = 0;
-    int minIndex = 0;
-    int maxIndex = 0;
+    unsigned selected = 0;
+    unsigned minIndex = 0;
+    unsigned maxIndex = 0;
     std::vector<Result> results;
 };
