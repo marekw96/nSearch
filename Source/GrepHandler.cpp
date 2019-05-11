@@ -3,6 +3,7 @@
 #include <sstream>
 #include <regex>
 #include "executeCommand.hpp"
+#include "Mmap.hpp"
 
 namespace 
 {
@@ -14,9 +15,9 @@ namespace
         return begin + std::string(pattern) + end;
     }
 
-    std::vector<std::string> splitByLine(std::string_view input)
+    std::vector<std::string> splitByLine(const Mmap& input)
     {
-        std::stringstream stream(input.data());
+        std::stringstream stream(input.begin());
         std::vector<std::string> lines;
         std::string temp;
 

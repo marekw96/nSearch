@@ -6,7 +6,7 @@
 #include <fstream>
 #include <streambuf>
 
-std::string executeCommand(std::string_view command)
+Mmap executeCommand(std::string_view command)
 {
     auto OUTPUT_FILE = "command_output.txt";
     std::string full_cmd{command};
@@ -18,9 +18,5 @@ std::string executeCommand(std::string_view command)
 
     system(full_cmd.c_str());
 
-    std::ifstream file(OUTPUT_FILE);
-    std::string output((std::istreambuf_iterator<char>(file)),
-                       (std::istreambuf_iterator<char>()));
-
-    return output;
+    return Mmap(OUTPUT_FILE);
 }

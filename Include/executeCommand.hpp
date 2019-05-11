@@ -1,6 +1,6 @@
 #pragma once
 
 #include <string_view>
-#include <string>
+#include "Mmap.hpp"
 
-std::string executeCommand(std::string_view command);
+Mmap executeCommand(std::string_view command);
