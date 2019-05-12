@@ -2,13 +2,17 @@
 #include "aixlog.hpp"
 
 #include "MainWindow.hpp"
+#include "Settings.hpp"
 
 using namespace cppurses;
 
 int main()
 {
+
     System sys;
     AixLog::Log::init<AixLog::SinkFile>(AixLog::Severity::trace, AixLog::Type::all, "log.txt");
+    
+    Settings settings{};
 
     MainWindow mainWindow{};
     mainWindow.init();
