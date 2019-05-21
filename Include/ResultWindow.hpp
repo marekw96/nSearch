@@ -7,15 +7,19 @@
 #include "Signals.hpp"
 #include "ItemList.hpp"
 #include "FilePreview.hpp"
+#include "Settings.hpp"
 
 using namespace cppurses;
 
 struct ResultWindow : public cppurses::layout::Horizontal{
-    void init()
+    ResultWindow(Settings& settings)
+        : settings(settings)
     {
         Signal::changedPreview.connect([&](Result result){
-            preview.setPreview(std::move(result));
-                });
+            if(settings.get<bool>("OPEN_PREVIEW"))
+                preview.setPreview(std::move(result));
+        });
+
     }
     
     void setResults(std::vector<Result> results)
@@ -25,4 +29,5 @@ struct ResultWindow : public cppurses::layout::Horizontal{
 
     ItemList& items{this->make_child<ItemList>()};
     FilePreview& preview{this->make_child<FilePreview>()};
+    Settings& settings;
 };

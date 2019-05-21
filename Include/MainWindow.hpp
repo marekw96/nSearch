@@ -6,26 +6,31 @@
 #include "ResultWindow.hpp"
 #include "InputArea.hpp"
 #include "GrepHandler.hpp"
+#include "Settings.hpp"
 
 using namespace cppurses;
 
 class MainWindow : public layout::Vertical 
 {
 public:
-    void init()
+    MainWindow(Settings& settings)
+        : settings(settings), output(this->make_child<ResultWindow>(settings))
     {
-        output.init();
-        input.init();
-        Focus::set_focus_to(&input.search);
         Signal::search.connect([&](std::string command){
                 auto results = grep.grep(command);
 
                 output.setResults(std::move(results));
                 });
     }
+    void init()
+    {
+        input.init();
+        Focus::set_focus_to(&input.search);
+    }
 
 private:
-    ResultWindow& output{this->make_child<ResultWindow>()};
+    Settings& settings;
+    ResultWindow& output;
     InputArea& input{this->make_child<InputArea>()};
     GrepHandler grep;
 };

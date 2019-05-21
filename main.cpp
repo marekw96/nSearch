@@ -14,7 +14,7 @@ int main()
     
     Settings settings{};
 
-    MainWindow mainWindow{};
+    MainWindow mainWindow{settings};
     mainWindow.init();
 
     return sys.run(mainWindow);
