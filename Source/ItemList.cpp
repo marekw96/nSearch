@@ -23,6 +23,9 @@ ItemList::ItemList()
 void ItemList::setResults(std::vector<Result> results)
 {
     this->results = std::move(results);
+    if(this->results.empty())
+	    return;
+
     selected = 0;
     minIndex = 0;
     maxIndex = height();

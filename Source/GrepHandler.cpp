@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <regex>
+#include <aixlog.hpp>
 #include "executeCommand.hpp"
 #include "Mmap.hpp"
 
@@ -76,8 +77,22 @@ namespace
 std::vector<Result> GrepHandler::grep(std::string_view pattern)
 {
     auto command = prepareCommand(pattern);
-    auto result = executeCommand(command);
-    auto lines = splitByLine(result);
+    try
+    {
+	auto result = executeCommand(command);
+	auto lines = splitByLine(result);
 
-    return filterResult(lines);
+	return filterResult(lines);
+    }
+    catch(const std::exception& ex)
+    {
+	LOG(DEBUG) << "execute command failed! exception: " << ex.what() << std::endl;
+	return {};
+    }
+    catch(...)
+    {
+	LOG(DEBUG) << "execute command failed! unknown exception!" << std::endl;
+	return {};
+    }
+    return {};
 }
